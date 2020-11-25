@@ -40,7 +40,10 @@ public class TestingEngine {
 
         for (int i = 1; i < benchmarkRequest.getRepeatCount() + 1; i++) {
             final DatabaseQueryResult result = database.executeQuery();
-            log.debug("#{} run: Query result: Duration: {} µs, isFromCache: {}", i, result.queryDurationNanoTime / 1000, result.isFromResultCache());
+            if (log.isDebugEnabled()) {
+                log.debug("#{} run: Query result: Duration: {} µs, isFromCache: {}", i, result.queryDurationNanoTime / 1000,
+                        result.isFromResultCache());
+            }
             resultList.addResult(result);
         }
 
