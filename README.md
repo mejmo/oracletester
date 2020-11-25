@@ -14,10 +14,6 @@ java -jar oracletester-jar-with-dependencies.jar -h
 usage: Oracle JDBC query tester
        [-h] [-v] -U USER -p PASSWORD [-d] [-r REPEATNUM] jdbcurl
        sqlquery
-Oracle JDBC query tester: error: too few arguments
-usage: Oracle JDBC query tester
-       [-h] [-v] -U USER -p PASSWORD [-d] [-r REPEATNUM] jdbcurl
-       sqlquery
 
 Make summary of Oracle JDBC cache latencies
 
