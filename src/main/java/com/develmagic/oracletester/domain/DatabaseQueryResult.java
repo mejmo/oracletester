@@ -27,8 +27,12 @@ public class DatabaseQueryResult {
     @Getter
     public Long queryDurationNanoTime;
 
-    public DatabaseQueryResult(Long queryDuration) {
+    @Getter
+    public boolean fromResultCache;
+
+    public DatabaseQueryResult(Long queryDuration, boolean fromResultCache) {
         this.queryDurationNanoTime = queryDuration;
+        this.fromResultCache = fromResultCache;
     }
 
     public boolean isFromCacheBasedOnDuration() {

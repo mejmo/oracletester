@@ -51,13 +51,13 @@ public class BenchmarkRequest {
     @Getter
     private boolean disableCache;
 
-    public BenchmarkRequest(String jdbcUrl, String username, String password, String sqlQuery, long repeatCount, boolean cacheEnabled) {
+    public BenchmarkRequest(String jdbcUrl, String username, String password, String sqlQuery, long repeatCount, boolean cacheDisabled) {
         this.jdbcUrl = jdbcUrl;
         this.username = username;
         this.password = password;
         this.sqlQuery = sqlQuery;
         this.repeatCount = repeatCount;
-        this.disableCache = !cacheEnabled;
+        this.disableCache = cacheDisabled;
 
 //        TODO - create provider
 //        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

@@ -18,7 +18,7 @@
 
 package com.develmagic.oracletester;
 
-import static com.develmagic.oracletester.BenchmarkArgumentParser.CACHE_ENABLED;
+import static com.develmagic.oracletester.BenchmarkArgumentParser.CACHE_DISABLED;
 import static com.develmagic.oracletester.BenchmarkArgumentParser.JDBC_PASSWORD;
 import static com.develmagic.oracletester.BenchmarkArgumentParser.JDBC_QUERY;
 import static com.develmagic.oracletester.BenchmarkArgumentParser.JDBC_URL_ARG;
@@ -49,7 +49,7 @@ public class Application {
                 res.get(JDBC_PASSWORD),
                 res.get(JDBC_QUERY),
                 res.get(REPEAT_COUNT),
-                res.getBoolean(CACHE_ENABLED)
+                res.getBoolean(CACHE_DISABLED)
         )).start();
     }
 

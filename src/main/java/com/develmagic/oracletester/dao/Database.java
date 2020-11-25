@@ -28,6 +28,10 @@ import java.sql.Statement;
 import java.util.Properties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import oracle.jdbc.OraclePreparedStatement;
+import oracle.jdbc.OracleResultSet;
+import oracle.jdbc.OracleStatement;
+import oracle.jdbc.pool.OracleDataSource;
 import org.apache.commons.lang3.time.StopWatch;
 
 @Slf4j
@@ -56,7 +60,12 @@ public class Database {
 
         try {
             log.debug("Connecting to database {}", benchmarkRequest.getJdbcUrl());
-            con = DriverManager.getConnection(benchmarkRequest.getJdbcUrl(), createProperties(benchmarkRequest));
+            OracleDataSource oracleDataSource = new OracleDataSource();
+            oracleDataSource.setExplicitCachingEnabled(!benchmarkRequest.isDisableCache());
+            oracleDataSource.setImplicitCachingEnabled(!benchmarkRequest.isDisableCache());
+            oracleDataSource.setConnectionProperties(createProperties(benchmarkRequest));
+            oracleDataSource.setURL(benchmarkRequest.getJdbcUrl());
+            con = oracleDataSource.getConnection();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             System.exit(-1);
@@ -77,14 +86,19 @@ public class Database {
     public DatabaseQueryResult executeQuery() {
         final StopWatch stopWatch = new StopWatch();
         ResultSet resultSet = null;
+        OraclePreparedStatement statement = null;
         try {
-            final Statement statement = con.createStatement();
+
+            statement = (OraclePreparedStatement) con.prepareStatement(benchmarkRequest.getSqlQuery());
 
             stopWatch.start();
             resultSet = statement.executeQuery(benchmarkRequest.getSqlQuery());
+            while (resultSet.next()) {
+                //
+            }
             stopWatch.stop();
 
-            return new DatabaseQueryResult(stopWatch.getNanoTime());
+            return new DatabaseQueryResult(stopWatch.getNanoTime(), ((OracleResultSet)resultSet).isFromResultSetCache());
 
         } catch (SQLException throwables) {
             log.error("Cannot execute query");
@@ -96,6 +110,7 @@ public class Database {
             if (resultSet != null) {
                 try {
                     resultSet.close();
+                    statement.close();
                 } catch (SQLException throwables) {
                 }
             }

@@ -20,6 +20,7 @@ package com.develmagic.oracletester;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -59,7 +60,7 @@ class BenchmarkArgumentParser {
     public static final String JDBC_PASSWORD = "password";
     public static final String VERBOSE = "verbose";
     public static final String REPEAT_COUNT = "repeatnum";
-    public static final String CACHE_ENABLED = "cacheenabled";
+    public static final String CACHE_DISABLED = "cachedisabled";
 
     public static Namespace parseArguments(String[] args) {
         final ArgumentParser parser = ArgumentParsers.newFor("Oracle JDBC query tester").build()
@@ -67,7 +68,7 @@ class BenchmarkArgumentParser {
                 .description("Make summary of Oracle JDBC cache latencies");
 
         parser.addArgument("-v", "--" + VERBOSE)
-                .setDefault(false)
+                .action(Arguments.storeTrue())
                 .help("Verbose output");
 
         parser.addArgument("-U", "--" + JDBC_USERNAME)
@@ -78,10 +79,9 @@ class BenchmarkArgumentParser {
                 .required(true)
                 .help("Database password");
 
-        parser.addArgument("-c", "--" + CACHE_ENABLED)
-                .setDefault(true)
-                .type(Boolean.class)
-                .help("Enable JDBC Result cache");
+        parser.addArgument("-d", "--" + CACHE_DISABLED)
+                .action(Arguments.storeTrue())
+                .help("Disable JDBC Result cache");
 
         parser.addArgument("-r", "--" + REPEAT_COUNT)
                 .required(false)

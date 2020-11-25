@@ -12,8 +12,12 @@ java -jar oracletester-jar-with-dependencies.jar -h
 ```
 ```
 usage: Oracle JDBC query tester
-       [-h] [-v VERBOSE] -U USER -p PASSWORD [-c {true,false}]
-       [-r REPEATNUM] jdbcurl sqlquery
+       [-h] [-v] -U USER -p PASSWORD [-d] [-r REPEATNUM] jdbcurl
+       sqlquery
+Oracle JDBC query tester: error: too few arguments
+usage: Oracle JDBC query tester
+       [-h] [-v] -U USER -p PASSWORD [-d] [-r REPEATNUM] jdbcurl
+       sqlquery
 
 Make summary of Oracle JDBC cache latencies
 
@@ -21,18 +25,15 @@ positional arguments:
   jdbcurl                JDBC URL  to  use  for  connection.  Format: jdbc:
                          oracle:thin:@<DB_HOSTNAME>:1521/<SERVICE_NAME>  or
                          jdbc:oracle:thin:@<DB_HOSTNAME>:1521:SID
-  sqlquery               SQL to be  tested.  Can  contain dynamic variables
-                         (## for random number or %% for random string)
+  sqlquery               SQL to be executed.
 
 named arguments:
   -h, --help             show this help message and exit
-  -v VERBOSE, --verbose VERBOSE
-                         Verbose output
+  -v, --verbose          Verbose output (default: false)
   -U USER, --user USER   Database schema/user
   -p PASSWORD, --password PASSWORD
                          Database password
-  -c {true,false}, --cacheenabled {true,false}
-                         Enable JDBC Result cache (default: true)
+  -d, --cachedisabled    Disable JDBC Result cache (default: false)
   -r REPEATNUM, --repeatnum REPEATNUM
                          How  many  times   command   should   be  repeated
                          (default: 100)
