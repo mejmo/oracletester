@@ -24,10 +24,15 @@ import static com.develmagic.oracletester.BenchmarkArgumentParser.JDBC_QUERY;
 import static com.develmagic.oracletester.BenchmarkArgumentParser.JDBC_URL_ARG;
 import static com.develmagic.oracletester.BenchmarkArgumentParser.JDBC_USERNAME;
 import static com.develmagic.oracletester.BenchmarkArgumentParser.REPEAT_COUNT;
+import static com.develmagic.oracletester.BenchmarkArgumentParser.VERBOSE;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
 import com.develmagic.oracletester.domain.BenchmarkRequest;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.slf4j.LoggerFactory;
 
 /**
  * Simple application outputs latencies for selected query
@@ -37,6 +42,7 @@ public class Application {
 
     public static void main(String[] args) {
         final Namespace res = BenchmarkArgumentParser.parseArguments(args);
+        setLoggingLevel(res.getBoolean(VERBOSE));
         new TestingEngine(new BenchmarkRequest(
                 res.get(JDBC_URL_ARG),
                 res.get(JDBC_USERNAME),
@@ -45,6 +51,16 @@ public class Application {
                 res.get(REPEAT_COUNT),
                 res.getBoolean(CACHE_ENABLED)
         )).start();
+    }
+
+    private static void setLoggingLevel(Boolean verboseEnabled) {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        Logger root = loggerContext.getLogger("com.develmagic");
+        if (verboseEnabled) {
+            root.setLevel(Level.DEBUG);
+        } else {
+            root.setLevel(Level.INFO);
+        }
     }
 
 }

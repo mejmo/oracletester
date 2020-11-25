@@ -18,14 +18,38 @@
 
 package com.develmagic.oracletester;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 
+/**
+ * usage: Oracle JDBC query tester
+ *        [-h] [-v VERBOSE] -U USER -p PASSWORD [-c {true,false}]
+ *        [-r REPEATNUM] jdbcurl sqlquery
+ *
+ * Make summary of Oracle JDBC cache latencies
+ *
+ * positional arguments:
+ *   jdbcurl                JDBC URL  to  use  for  connection.  Format: jdbc:
+ *                          oracle:thin:@<DB_HOSTNAME>:1521/<SERVICE_NAME>  or
+ *                          jdbc:oracle:thin:@<DB_HOSTNAME>:1521:SID
+ *   sqlquery               SQL to be executed.
+ *
+ * named arguments:
+ *   -h, --help             show this help message and exit
+ *   -v VERBOSE, --verbose VERBOSE
+ *                          Verbose output (default: false)
+ *   -U USER, --user USER   Database schema/user
+ *   -p PASSWORD, --password PASSWORD
+ *                          Database password
+ *   -c {true,false}, --cacheenabled {true,false}
+ *                          Enable JDBC Result cache (default: true)
+ *   -r REPEATNUM, --repeatnum REPEATNUM
+ *                          How  many  times   command   should   be  repeated
+ *                          (default: 100)
+ */
 @Slf4j
 class BenchmarkArgumentParser {
 
@@ -38,12 +62,12 @@ class BenchmarkArgumentParser {
     public static final String CACHE_ENABLED = "cacheenabled";
 
     public static Namespace parseArguments(String[] args) {
-        log.debug("Parsing parameters: {}", Arrays.stream(args).collect(Collectors.joining(", ")));
         final ArgumentParser parser = ArgumentParsers.newFor("Oracle JDBC query tester").build()
                 .defaultHelp(true)
                 .description("Make summary of Oracle JDBC cache latencies");
 
         parser.addArgument("-v", "--" + VERBOSE)
+                .setDefault(false)
                 .help("Verbose output");
 
         parser.addArgument("-U", "--" + JDBC_USERNAME)
@@ -71,11 +95,11 @@ class BenchmarkArgumentParser {
 
         parser.addArgument(JDBC_QUERY)
                 .required(true)
-                .help("SQL to be tested. Can contain dynamic variables (## for random number or %% for random string)");
+                .help("SQL to be executed.");
         try {
             return parser.parseArgs(args);
         } catch (ArgumentParserException e) {
-//            parser.handleError(e);
+            parser.handleError(e);
             System.err.println(parser.formatHelp());
             System.exit(1);
             return null;
