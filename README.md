@@ -2,8 +2,14 @@
 
 Simple tool for getting latency benchmark using JDBC Oracle driver.
 
+## Installation
+- `./mvnw package`
+
 ## Usage
 
+```
+java -jar oracletester-jar-with-dependencies.jar -h
+```
 ```
 usage: Oracle JDBC query tester
        [-h] [-v VERBOSE] -U USER -p PASSWORD [-c {true,false}]
