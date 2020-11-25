@@ -39,8 +39,9 @@ named arguments:
                          (default: 100)
 ```
 
-## Output
 ```
+# java -jar oracletester-jar-with-dependencies.jar -v -U system -p oracle jdbc:oracle:thin:@192.168.5.115:49161:XE "SELECT * FROM TESTING" -r 10000
+
 AVG   : 975.23 us
 MED   : 899.15 us
 STDEV : 1578.99 us
