@@ -49,6 +49,43 @@ public class Database {
         this.benchmarkRequest = benchmarkRequest;
     }
 
+    /**
+     * Executes query in database. Checks if the query was fetched from result cache or not. Server must support
+     * @return
+     */
+    public DatabaseQueryResult executeQuery() {
+        final StopWatch stopWatch = new StopWatch();
+        ResultSet resultSet = null;
+        OraclePreparedStatement statement = null;
+        try {
+
+            statement = (OraclePreparedStatement) con.prepareStatement(benchmarkRequest.getSqlQuery());
+
+            stopWatch.start();
+            // Metering region start
+            resultSet = statement.executeQuery(benchmarkRequest.getSqlQuery());
+            // Metering region end
+            stopWatch.stop();
+
+            return new DatabaseQueryResult(stopWatch.getNanoTime(), ((OracleResultSet)resultSet).isFromResultSetCache());
+
+        } catch (SQLException throwables) {
+            log.error("Cannot execute query");
+            throwables.printStackTrace();
+            releaseResources();
+            System.exit(-1);
+            return null;
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                    statement.close();
+                } catch (SQLException throwables) {
+                }
+            }
+        }
+    }
+
     public void connect() {
         try {
             log.debug("Loading driver");
@@ -72,7 +109,21 @@ public class Database {
         }
     }
 
-    public void releaseResources() {
+    private Properties createProperties(BenchmarkRequest benchmarkRequest) {
+        final Properties props = new Properties();
+        if (benchmarkRequest.isDisableCache()) {
+            props.put(PROP_RESULT_CACHE, Boolean.FALSE.toString());
+            props.put(PROP_RESULT_CACHE_12, Boolean.FALSE.toString());
+        } else {
+            props.put("oracle.jdbc.implicitStatementCacheSize", 500);
+            props.put("oracle.jdbc.explicitStatementCacheSize", 500);
+        }
+        props.put("user", benchmarkRequest.getUsername());
+        props.put("password", benchmarkRequest.getPassword());
+        return props;
+    }
+
+    private void releaseResources() {
         if (con != null) {
             try {
                 log.error("Closing database connection");
@@ -81,51 +132,6 @@ public class Database {
                 //empty
             }
         }
-    }
-
-    public DatabaseQueryResult executeQuery() {
-        final StopWatch stopWatch = new StopWatch();
-        ResultSet resultSet = null;
-        OraclePreparedStatement statement = null;
-        try {
-
-            statement = (OraclePreparedStatement) con.prepareStatement(benchmarkRequest.getSqlQuery());
-
-            stopWatch.start();
-            resultSet = statement.executeQuery(benchmarkRequest.getSqlQuery());
-            while (resultSet.next()) {
-                //
-            }
-            stopWatch.stop();
-
-            return new DatabaseQueryResult(stopWatch.getNanoTime(), ((OracleResultSet)resultSet).isFromResultSetCache());
-
-        } catch (SQLException throwables) {
-            log.error("Cannot execute query");
-            throwables.printStackTrace();
-            releaseResources();
-            System.exit(-1);
-            return null;
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                    statement.close();
-                } catch (SQLException throwables) {
-                }
-            }
-        }
-    }
-
-    private Properties createProperties(BenchmarkRequest benchmarkRequest) {
-        final Properties props = new Properties();
-        if (benchmarkRequest.isDisableCache()) {
-            props.put(PROP_RESULT_CACHE, Boolean.FALSE.toString());
-            props.put(PROP_RESULT_CACHE_12, Boolean.FALSE.toString());
-        }
-        props.put("user", benchmarkRequest.getUsername());
-        props.put("password", benchmarkRequest.getPassword());
-        return props;
     }
 
 }
