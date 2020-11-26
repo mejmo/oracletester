@@ -1,6 +1,7 @@
 # Oracle JDBC latency benchmark
 
-Simple tool for getting latency benchmark using JDBC Oracle driver.
+Request from customer, to develop simple tool for making latency benchmark using JDBC Oracle driver. Option to disable/enable local JDBC result cache.
+No unit tests, project tightly timeboxed.
 
 ## Installation
 - `./mvnw package`
