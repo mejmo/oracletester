@@ -61,6 +61,7 @@ class BenchmarkArgumentParser {
     public static final String VERBOSE = "verbose";
     public static final String REPEAT_COUNT = "repeatnum";
     public static final String CACHE_DISABLED = "cachedisabled";
+    public static final String RESULT_FETCHING = "resultFetching";
 
     public static Namespace parseArguments(String[] args) {
         final ArgumentParser parser = ArgumentParsers.newFor("Oracle JDBC query tester").build()
@@ -82,6 +83,10 @@ class BenchmarkArgumentParser {
         parser.addArgument("-d", "--" + CACHE_DISABLED)
                 .action(Arguments.storeTrue())
                 .help("Disable JDBC Result cache");
+
+        parser.addArgument("-x", "--" + RESULT_FETCHING)
+                .action(Arguments.storeTrue())
+                .help("For every request loop all rows in result set");
 
         parser.addArgument("-r", "--" + REPEAT_COUNT)
                 .required(false)

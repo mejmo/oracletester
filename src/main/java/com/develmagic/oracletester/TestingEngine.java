@@ -22,6 +22,10 @@ import com.develmagic.oracletester.dao.Database;
 import com.develmagic.oracletester.domain.BenchmarkRequest;
 import com.develmagic.oracletester.domain.BenchmarkResultList;
 import com.develmagic.oracletester.domain.DatabaseQueryResult;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,6 +38,7 @@ public class TestingEngine {
         this.benchmarkRequest = benchmarkRequest;
     }
 
+    @SneakyThrows
     public void start() {
         initializeDatabase();
         final BenchmarkResultList resultList = new BenchmarkResultList();
@@ -41,13 +46,15 @@ public class TestingEngine {
         for (int i = 1; i < benchmarkRequest.getRepeatCount() + 1; i++) {
             final DatabaseQueryResult result = database.executeQuery();
             if (log.isDebugEnabled()) {
-                log.debug("#{} run: Query result: Duration: {} µs, isFromCache: {}", i, result.queryDurationNanoTime / 1000,
+                log.debug("#{} run: Query result: Duration: {} us, isFromCache: {}", i, result.queryDurationNanoTime / 1000,
                         result.isFromResultCache());
             }
             resultList.addResult(result);
         }
 
         new SummaryWriter(resultList).print();
+        log.info("Waiting for user confirmation: ");
+        new BufferedReader(new InputStreamReader(System.in)).readLine();
     }
 
     private void initializeDatabase() {

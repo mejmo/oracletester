@@ -64,6 +64,11 @@ public class Database {
             stopWatch.start();
             // Metering region start
             resultSet = statement.executeQuery(benchmarkRequest.getSqlQuery());
+            if (benchmarkRequest.isResultFetching()) {
+                while (resultSet.next()) {
+                    log.debug("resultSet.next() from result cache: {}", ((OracleResultSet) resultSet).isFromResultSetCache());
+                }
+            }
             // Metering region end
             stopWatch.stop();
 
@@ -115,6 +120,8 @@ public class Database {
             props.put(PROP_RESULT_CACHE, Boolean.FALSE.toString());
             props.put(PROP_RESULT_CACHE_12, Boolean.FALSE.toString());
         } else {
+            props.put(PROP_RESULT_CACHE, Boolean.TRUE.toString());
+            props.put(PROP_RESULT_CACHE_12, Boolean.TRUE.toString());
             props.put("oracle.jdbc.implicitStatementCacheSize", 500);
             props.put("oracle.jdbc.explicitStatementCacheSize", 500);
         }

@@ -51,7 +51,11 @@ public class BenchmarkRequest {
     @Getter
     private boolean disableCache;
 
-    public BenchmarkRequest(String jdbcUrl, String username, String password, String sqlQuery, long repeatCount, boolean cacheDisabled) {
+    @Getter
+    private boolean resultFetching;
+
+    public BenchmarkRequest(String jdbcUrl, String username, String password, String sqlQuery, long repeatCount, boolean cacheDisabled, boolean resultFetching) {
+        this.resultFetching = resultFetching;
         this.jdbcUrl = jdbcUrl;
         this.username = username;
         this.password = password;
