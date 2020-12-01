@@ -25,13 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SummaryWriter {
 
-    private BenchmarkResultList benchmarkResultList;
-
-    public SummaryWriter(BenchmarkResultList resultList) {
-        this.benchmarkResultList = resultList;
-    }
-
-    public void print(PrintStream printStream) {
+    public void print(PrintStream printStream, BenchmarkResultList benchmarkResultList) {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
         stringBuilder.append("Benchmark summary:\n\n");
@@ -44,8 +38,8 @@ public class SummaryWriter {
         }
     }
 
-    public void print() {
-        this.print(null);
+    public void print(BenchmarkResultList benchmarkResultList) {
+        this.print(null, benchmarkResultList);
     }
 
 }

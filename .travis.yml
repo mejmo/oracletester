@@ -1,0 +1,10 @@
+language: java
+
+jdk:
+  - openjdk10
+
+sudo: false
+script: mvn install
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

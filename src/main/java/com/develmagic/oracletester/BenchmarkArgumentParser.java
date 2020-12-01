@@ -63,7 +63,7 @@ class BenchmarkArgumentParser {
     public static final String CACHE_DISABLED = "cachedisabled";
     public static final String RESULT_FETCHING = "resultFetching";
 
-    public static Namespace parseArguments(String[] args) {
+    public static Namespace parseArguments(String[] args) throws ArgumentParserException {
         final ArgumentParser parser = ArgumentParsers.newFor("Oracle JDBC query tester").build()
                 .defaultHelp(true)
                 .description("Make summary of Oracle JDBC cache latencies");
@@ -106,8 +106,7 @@ class BenchmarkArgumentParser {
         } catch (ArgumentParserException e) {
             parser.handleError(e);
             System.err.println(parser.formatHelp());
-            System.exit(1);
-            return null;
+            throw e;
         }
     }
 

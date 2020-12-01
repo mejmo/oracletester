@@ -47,4 +47,8 @@ public class BenchmarkResultList {
         return FastMath.sqrt(StatUtils.variance(list.stream()
                 .mapToDouble(DatabaseQueryResult::getQueryDurationNanoTime).toArray()));
     }
+
+    public LinkedList<DatabaseQueryResult> getList() {
+        return list;
+    }
 }

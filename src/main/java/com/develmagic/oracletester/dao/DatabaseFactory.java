@@ -16,22 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.develmagic.oracletester.domain;
+package com.develmagic.oracletester.dao;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import com.develmagic.oracletester.domain.BenchmarkRequest;
 
-public class DatabaseQueryResult {
-
-    @Getter
-    public Long queryDurationNanoTime;
-
-    @Getter
-    public boolean fromResultCache;
-
-    public DatabaseQueryResult(Long queryDuration, boolean fromResultCache) {
-        this.queryDurationNanoTime = queryDuration;
-        this.fromResultCache = fromResultCache;
+public class DatabaseFactory {
+    public static Database create(BenchmarkRequest benchmarkRequest) {
+        return new Database(benchmarkRequest);
     }
-
 }

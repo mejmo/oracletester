@@ -18,13 +18,14 @@
 
 package com.develmagic.oracletester.domain;
 
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 
+/**
+ * Domain object
+ */
 public class BenchmarkRequest {
 
     @Getter
@@ -62,9 +63,5 @@ public class BenchmarkRequest {
         this.sqlQuery = sqlQuery;
         this.repeatCount = repeatCount;
         this.disableCache = cacheDisabled;
-
-//        TODO - create provider
-//        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-//        factory.getValidator().validate(this);
     }
 }
