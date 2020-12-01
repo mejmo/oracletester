@@ -54,3 +54,9 @@ STDEV : 1578.99 us
 ```
 
 ## How to use custom JDBC driver
+
+Change the version in pom.xml and rebuild the jar again. Changing the driver on already built package is not possible at the moment
+
+## Author
+
+Martin Formanko 2020 
