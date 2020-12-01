@@ -32,6 +32,7 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import com.develmagic.oracletester.domain.BenchmarkRequest;
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,12 @@ import org.slf4j.LoggerFactory;
 public class Application {
 
     public static void main(String[] args) {
-        final Namespace res = BenchmarkArgumentParser.parseArguments(args);
+        Namespace res = null;
+        try {
+            res = BenchmarkArgumentParser.parseArguments(args);
+        } catch (ArgumentParserException e) {
+            System.exit(-1);
+        }
         setLoggingLevel(res.getBoolean(VERBOSE));
         new TestingEngine(new BenchmarkRequest(
                 res.get(JDBC_URL_ARG),
@@ -52,7 +58,7 @@ public class Application {
                 res.get(REPEAT_COUNT),
                 res.getBoolean(CACHE_DISABLED),
                 res.getBoolean(RESULT_FETCHING)
-        )).start();
+        )).start(new SummaryWriter(), true);
     }
 
     private static void setLoggingLevel(Boolean verboseEnabled) {

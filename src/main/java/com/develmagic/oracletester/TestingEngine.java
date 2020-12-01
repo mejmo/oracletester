@@ -19,12 +19,12 @@
 package com.develmagic.oracletester;
 
 import com.develmagic.oracletester.dao.Database;
+import com.develmagic.oracletester.dao.DatabaseFactory;
 import com.develmagic.oracletester.domain.BenchmarkRequest;
 import com.develmagic.oracletester.domain.BenchmarkResultList;
 import com.develmagic.oracletester.domain.DatabaseQueryResult;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +39,7 @@ public class TestingEngine {
     }
 
     @SneakyThrows
-    public void start() {
+    public BenchmarkResultList start(SummaryWriter writer, boolean waitForNewLine) {
         initializeDatabase();
         final BenchmarkResultList resultList = new BenchmarkResultList();
 
@@ -51,14 +51,16 @@ public class TestingEngine {
             }
             resultList.addResult(result);
         }
-
-        new SummaryWriter(resultList).print();
+        writer.print(resultList);
         log.info("Waiting for user confirmation: ");
-        new BufferedReader(new InputStreamReader(System.in)).readLine();
+        if (waitForNewLine) {
+            new BufferedReader(new InputStreamReader(System.in)).readLine();
+        }
+        return resultList;
     }
 
     private void initializeDatabase() {
-        database = new Database(benchmarkRequest);
+        database = DatabaseFactory.create(benchmarkRequest);
         database.connect();
     }
 
